@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "PythonNETSaxonCTest1": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "PYTHONNET_PYDLL": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Python39_64\\python39.dll"
+      }
+    }
+  }
+}
