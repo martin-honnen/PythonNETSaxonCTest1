@@ -74,5 +74,24 @@ using (dynamic saxonproc = saxonche.PySaxonProcessor())
     {
         Console.WriteLine("{0}:\n{1}", uri, resultDocs[uri]);
     }
+
+    dynamic parseJsonFn = saxonche.PyXdmFunctionItem().get_system_function(saxonproc, "{http://www.w3.org/2005/xpath-functions}parse-json", 1);
+
+    var exampleJSON = @"{ ""name"" : ""foo"", ""data"" : [1, 2, 3, 4, 5] }";
+
+    dynamic argumentList = new PyList();
+    argumentList.append(saxonproc.make_string_value(exampleJSON));
+
+    dynamic functionCallResult = parseJsonFn.call(saxonproc, argumentList);
+
+    Console.WriteLine(functionCallResult);
+
+    dynamic xpathProcessor = saxonproc.new_xpath_processor();
+
+    xpathProcessor.set_context(xdm_item: functionCallResult.head);
+
+    dynamic xdmNode = xpathProcessor.evaluate_single(". => serialize(map { 'method' : 'json' }) => json-to-xml()");
+
+    Console.WriteLine(xdmNode);
 }
 
