@@ -45,5 +45,34 @@ using (dynamic saxonproc = saxonche.PySaxonProcessor())
         Console.WriteLine(xdmItem);
     }
 
+
+    xslt30Transformer = xslt30Processor.compile_stylesheet(stylesheet_text: @"<xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' version='3.0' expand-text='yes'>
+<xsl:output indent='yes' build-tree='no'/>
+<xsl:template name='xsl:initial-template'>
+  <principal-result>
+    <root>This is a test with {system-property('xsl:product-name')} {system-property('xsl:product-version')} at {current-dateTime()}</root>
+  </principal-result>
+  <xsl:for-each select='1 to 5'>
+    <xsl:result-document href='result-{.}.xml'>
+      <root>This is test {.} with {system-property('xsl:product-name')} {system-property('xsl:product-version')} at {current-dateTime()}</root>
+    </xsl:result-document>
+  </xsl:for-each>
+</xsl:template>
+</xsl:stylesheet>");
+
+    xslt30Transformer.set_base_output_uri("urn:to-string");
+    xslt30Transformer.set_result_as_raw_value(false);
+    xslt30Transformer.set_capture_result_documents(true, false);
+
+    xdmValue = xslt30Transformer.call_template_returning_value(template_name: null);
+
+    Console.WriteLine(xdmValue);
+
+    dynamic resultDocs = xslt30Transformer.get_result_documents();
+
+    foreach (dynamic uri in resultDocs.keys())
+    {
+        Console.WriteLine("{0}:\n{1}", uri, resultDocs[uri]);
+    }
 }
 
