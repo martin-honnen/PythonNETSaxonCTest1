@@ -111,6 +111,7 @@ using (dynamic saxonproc = saxonche.PySaxonProcessor())
 
     xslt30Transformer = xslt30Processor.compile_stylesheet(stylesheet_text: @"<xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' version='3.0' expand-text='yes'>
 <xsl:output indent='yes'/>
+<xsl:mode on-no-match='shallow-cpy'/>
 <xsl:template name='xsl:initia-template'>
   <root>This is a test with {system-property('xsl:product-name')} {system-property('xsl:product-version')} at {current-dateTime()}</root>
 </xsl:template>
