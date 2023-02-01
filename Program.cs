@@ -93,5 +93,15 @@ using (dynamic saxonproc = saxonche.PySaxonProcessor())
     dynamic xdmNode = xpathProcessor.evaluate_single(". => serialize(map { 'method' : 'json' }) => json-to-xml()");
 
     Console.WriteLine(xdmNode);
+
+    dynamic xqueryProcessor = saxonproc.new_xquery_processor();
+
+    xqueryProcessor.set_query_content(@"declare namespace output = 'http://www.w3.org/2010/xslt-xquery-serialization';
+      declare option output:method 'text';
+      xml-to-json(., map { 'indent' : true() })");
+
+    var xqueryResult = xqueryProcessor.run_query_to_value(input_xdm_item: xdmNode);
+
+    Console.WriteLine(xqueryResult);
 }
 
