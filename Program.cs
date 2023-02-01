@@ -117,12 +117,27 @@ using (dynamic saxonproc = saxonche.PySaxonProcessor())
 </xsl:stylesheet>");
 
     if (xslt30Processor.exception_occurred)
+    {
         Console.WriteLine($"Error compiling stylesheet: {xslt30Processor.error_message}");
+        xslt30Processor.exception_clear();
+    }
     else
     {
         result = xslt30Transformer.call_template_returning_string(template_name: null);
 
         Console.WriteLine(result);
     }
+
+    var xpathResult = xpathProcessor.evaluate_single("1 div 0");
+
+    if (xpathProcessor.exception_occurred)
+    {
+        Console.WriteLine($"Error during XPath evaluation: {xpathProcessor.error_message}");
+    }
+    else
+    {
+        Console.Write(xpathResult);
+    }
+    
 }
 
