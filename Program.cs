@@ -103,5 +103,26 @@ using (dynamic saxonproc = saxonche.PySaxonProcessor())
     var xqueryResult = xqueryProcessor.run_query_to_value(input_xdm_item: xdmNode);
 
     Console.WriteLine(xqueryResult);
+
+
+    // error handling
+
+    xslt30Processor = saxonproc.new_xslt30_processor();
+
+    xslt30Transformer = xslt30Processor.compile_stylesheet(stylesheet_text: @"<xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' version='3.0' expand-text='yes'>
+<xsl:output indent='yes'/>
+<xsl:template name='xsl:initia-template'>
+  <root>This is a test with {system-property('xsl:product-name')} {system-property('xsl:product-version')} at {current-dateTime()}</root>
+</xsl:template>
+</xsl:stylesheet>");
+
+    if (xslt30Processor.exception_occurred)
+        Console.WriteLine($"Error compiling stylesheet: {xslt30Processor.error_message}");
+    else
+    {
+        result = xslt30Transformer.call_template_returning_string(template_name: null);
+
+        Console.WriteLine(result);
+    }
 }
 
