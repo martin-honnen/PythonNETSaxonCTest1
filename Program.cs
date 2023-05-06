@@ -105,11 +105,13 @@ using (dynamic saxonproc = saxonche.PySaxonProcessor())
     Console.WriteLine(xqueryResult);
 
 
-    // error handling
+    // exception handling
 
     xslt30Processor = saxonproc.new_xslt30_processor();
 
-    xslt30Transformer = xslt30Processor.compile_stylesheet(stylesheet_text: @"<xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' version='3.0' expand-text='yes'>
+    try
+    {
+        xslt30Transformer = xslt30Processor.compile_stylesheet(stylesheet_text: @"<xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' version='3.0' expand-text='yes'>
 <xsl:output indent='yes'/>
 <xsl:mode on-no-match='shallow-cpy'/>
 <xsl:template name='xsl:initia-template'>
@@ -117,28 +119,25 @@ using (dynamic saxonproc = saxonche.PySaxonProcessor())
 </xsl:template>
 </xsl:stylesheet>");
 
-    if (xslt30Processor.exception_occurred)
-    {
-        Console.WriteLine($"Error compiling stylesheet: {xslt30Processor.error_message}");
-        xslt30Processor.exception_clear();
-    }
-    else
-    {
         result = xslt30Transformer.call_template_returning_string(template_name: null);
 
         Console.WriteLine(result);
+    } 
+    catch (Exception e)
+    {
+        Console.WriteLine($"Error compiling stylesheet: {e.Message}");
     }
 
-    var xpathResult = xpathProcessor.evaluate_single("1 div 0");
-
-    if (xpathProcessor.exception_occurred)
+    try
     {
-        Console.WriteLine($"Error during XPath evaluation: {xpathProcessor.error_message}");
-    }
-    else
-    {
+        var xpathResult = xpathProcessor.evaluate_single("1 div 0");
         Console.Write(xpathResult);
     }
-    
+    catch (Exception e)
+    {
+        Console.WriteLine($"Error during XPath evaluation: {e.Message}");
+
+    }
+
 }
 
