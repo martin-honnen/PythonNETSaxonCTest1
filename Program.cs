@@ -1,5 +1,7 @@
 ﻿using Python.Runtime;
 
+Console.WriteLine($".NET {Environment.Version} on {Environment.OSVersion}");
+
 PythonEngine.Initialize();
 
 using var _ = Py.GIL();
@@ -75,16 +77,18 @@ using (dynamic saxonproc = saxonche.PySaxonProcessor())
         Console.WriteLine("{0}:\n{1}", uri, resultDocs[uri]);
     }
 
-    dynamic parseJsonFn = saxonche.PyXdmFunctionItem().get_system_function(saxonproc, "{http://www.w3.org/2005/xpath-functions}parse-json", 1);
+    //dynamic parseJsonFn = saxonche.PyXdmFunctionItem().get_system_function(saxonproc, "{http://www.w3.org/2005/xpath-functions}parse-json", 1, "utf8");
 
     var exampleJSON = @"{ ""name"" : ""foo"", ""data"" : [1, 2, 3, 4, 5] }";
 
-    dynamic argumentList = new PyList();
-    argumentList.append(saxonproc.make_string_value(exampleJSON));
+    //dynamic argumentList = new PyList();
+    //argumentList.append(saxonproc.make_string_value(exampleJSON));
 
-    dynamic functionCallResult = parseJsonFn.call(saxonproc, argumentList);
+    //dynamic functionCallResult = parseJsonFn.call(saxonproc, argumentList);
 
-    Console.WriteLine(functionCallResult);
+    //Console.WriteLine(functionCallResult);
+
+    dynamic functionCallResult = saxonproc.parse_json(json_text: exampleJSON);
 
     dynamic xpathProcessor = saxonproc.new_xpath_processor();
 
